@@ -54,6 +54,7 @@ export default function Login() {
 
         <Grid item xs={12} sm={6} sx={boxForms}>
           <div>
+          <p style={{ fontSize: "30px", margin: 0, marginBottom: "10px" }}><b>Login</b></p>
             <FormControl defaultValue="" required>
               <Label>Email</Label>
               <StyledInput placeholder="Digite seu email aqui" />
