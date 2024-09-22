@@ -21,7 +21,8 @@ const DefinedRoutes = () => {
                 {/* telas após login */}
                 <Route path="/home" element={<Home />} />
                 <Route path="/historico" element={<Historico />} />
-                <Route path="/novo_dispositivo" element={<FormDispositivo />} />
+                <Route path="/novo_dispositivo" element={<FormDispositivo pageName="Cadastrar Dispositivo" pageText="Novo dispositivo"/>} />
+                <Route path="/editar_dispositivo" element={<FormDispositivo pageName="Editar Dispositivo" pageText="Dados dispositivo"/>} />
             </Routes>
         </div>
     )

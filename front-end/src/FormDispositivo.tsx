@@ -18,7 +18,12 @@ const boxForms: SxProps = {
     marginTop: "20px" // Adicionar margem superior
 };
 
-export default function FormDispositivo() {
+interface DispositivoProps {
+    pageName: string;
+    pageText: string;
+  }
+
+export default function FormDispositivo(props: DispositivoProps) {
     return (
         <Container maxWidth="md" sx={{ justifyContent: 'center', display: 'flex' }}>
             <Box
@@ -26,10 +31,10 @@ export default function FormDispositivo() {
                     width: "100%"
                 }}
             >
-                <h1>Cadastrar dispositivo</h1>
+                <h1>{props.pageName}</h1>
                 <Grid sx={boxForms}>
                     <div>
-                        <p style={{ fontSize: "20px", margin: 0, marginBottom: "10px" }}><b>Novo dispositivo: </b></p>
+                        <p style={{ fontSize: "20px", margin: 0, marginBottom: "10px" }}><b>{props.pageText} </b></p>
 
                         <FormLabel labelName="Id do dispositivo" labelText='Digite os 4 valores do dispositivo' />
                         <FormLabel labelName="Nome" labelText='Como gostaria de chamar esse dispositivo? ' />
