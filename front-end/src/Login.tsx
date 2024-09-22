@@ -17,7 +17,9 @@ const boxTexto: SxProps = {
   textAlign: "center",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center"
+  justifyContent: "center",
+  borderTopLeftRadius: "15px",
+  borderBottomLeftRadius: "15px"
 };
 
 const boxForms: SxProps = {
@@ -25,12 +27,20 @@ const boxForms: SxProps = {
   alignItems: "center",
   justifyContent: "center",
   bgcolor: "#f1f8e9",
+  borderTopRightRadius: "15px",
+  borderBottomRightRadius: "15px"
 };
 
-export default function Initial() {
+export default function Login() {
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md"
+      style={{
+        height: '100vh', // Ocupa toda a altura da viewport
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
 
       <Grid container style={{ height: "400px" }}>
 
@@ -64,9 +74,6 @@ export default function Initial() {
             <div style={{ marginTop: "20px" }}>
               <Button>Acessar</Button>
             </div>
-
-
-
           </div>
         </Grid>
       </Grid>
