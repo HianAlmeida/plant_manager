@@ -10,7 +10,7 @@ interface FormProps {
 }
 export default function FormLabel(props: FormProps) {
     return (
-        <FormControl defaultValue="" required>
+        <FormControl defaultValue="" >
             <Label>{props.labelName}</Label>
             <StyledInput placeholder={props.labelText} />
             <HelperText />
