@@ -194,7 +194,7 @@ export default function Atuadores() {
 	// }, [database, dbRef, luz]);
 
 	return (
-		<Box sx={{ width: "100%", marginTop: 5, marginBottom: 20 }}>
+		<Box sx={{ width: "100%", marginTop: 5}}>
 			<h1>Cuidados Essenciais</h1>
 			<Box sx={boxContainer}>
 				<Button sx={boxTheme} onClick={handleClickRegar}>

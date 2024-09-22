@@ -21,7 +21,7 @@ const AppBarComponent = () => {
                         <Tabs value={pathname} aria-label="basic tabs example"
                             TabIndicatorProps={{ style: { color: 'green' } }}>
                             <Tab label="Início" component={Link} to="/home" value="/home" sx={{ height: 64 }} />
-                            <Tab label="Histórico" component={Link} to="/historico" value="/historico" />
+                            <Tab label="Novo Dispositivo" component={Link} to="/novo_dispositivo" value="/novo_dispositivo" />
                         </Tabs>
                     </Box>
                 </Toolbar>

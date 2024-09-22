@@ -105,14 +105,14 @@ export default function Temperatura() {
 						justifyContent: "center",
 					}}
 				>
-					<Box sx={{width: '52px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-						<DeviceThermostatIcon sx={{color: 'white', fontSize: '30px'}}/>
+					<Box sx={{width: '40px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+						<DeviceThermostatIcon sx={{color: 'white', fontSize: '25px'}}/>
 					</Box>
 					<div>
 						<p style={{ margin: 0, color: "#616161" }}>
 							Temperatura
 						</p>
-						<h1 style={{ margin: 0, fontSize: "1.9em" , color: '#689f38'}}>
+						<h1 style={{ margin: 0, fontSize: "1.5em" , color: '#689f38'}}>
 							{data["temperature"]}ºC
 						</h1>
 					</div>
@@ -125,14 +125,14 @@ export default function Temperatura() {
 						justifyContent: "center",
 					}}
 				>
-					<Box sx={{width: '52px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-						<WaterDropIcon sx={{color: 'white', fontSize: '30px'}}/>
+					<Box sx={{width: '40px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+						<WaterDropIcon sx={{color: 'white', fontSize: '25px'}}/>
 					</Box>
 					<div>
 						<p style={{ margin: 0, color: "#616161" }}>
 							Umidade
 						</p>
-						<h1 style={{ margin: 0, fontSize: "1.9em", color: '#689f38' }}>
+						<h1 style={{ margin: 0, fontSize: "1.5em", color: '#689f38' }}>
 							{data["humidity"]}%
 						</h1>
 					</div>
@@ -145,14 +145,14 @@ export default function Temperatura() {
 						justifyContent: "center",
 					}}
 				>
-					<Box sx={{width: '52px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-						<LightModeIcon sx={{color: 'white', fontSize: '30px'}}/>
+					<Box sx={{width: '40px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+						<LightModeIcon sx={{color: 'white', fontSize: '25px'}}/>
 					</Box>
 					<div>
 						<p style={{ margin: 0, color: "#616161" }}>
 							Luminosidade
 						</p>
-						<h1 style={{ margin: 0, fontSize: "1.9em" , color: '#689f38'}}>
+						<h1 style={{ margin: 0, fontSize: "1.5em" , color: '#689f38'}}>
 							{data["light"]}
 						</h1>
 					</div>
@@ -161,17 +161,17 @@ export default function Temperatura() {
 					sx={{
 						display: "flex",
 						alignItems: "center",
-						justifyContent: "center",
+						justifyContent: "center"
 					}}
 				>
-					<Box sx={{width: '52px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-						<OpacityIcon sx={{color: 'white', fontSize: '30px'}}/>
+					<Box sx={{width: '40px', height:'52px', bgcolor: '#4d4d4d', margin: '10px', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+						<OpacityIcon sx={{color: 'white', fontSize: '25px'}}/>
 					</Box>
 					<div>
 						<p style={{ margin: 0, color: "#616161" }}>
 							Umidade Solo
 						</p>
-						<h1 style={{ margin: 0, fontSize: "1.9em", color: '#689f38' }}>
+						<h1 style={{ margin: 0, fontSize: "1.5em", color: '#689f38' }}>
 							{data["humidity_soil"]}
 						</h1>
 					</div>

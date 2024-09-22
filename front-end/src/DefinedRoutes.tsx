@@ -19,10 +19,10 @@ const DefinedRoutes = () => {
                 <Route path="/redefinir_senha" element={<Login pageName="Redefinir Senha" buttonText="Salvar" seeOptions={false} />} />
                 <Route path="/novo_user" element={<Login pageName="Cadastro de usuário" buttonText="Salvar" seeOptions={false} />} />
                 {/* telas após login */}
-                <Route path="/home" element={<Home />} />
-                <Route path="/historico" element={<Historico />} />
                 <Route path="/novo_dispositivo" element={<FormDispositivo pageName="Cadastrar Dispositivo" pageText="Novo dispositivo"/>} />
                 <Route path="/editar_dispositivo" element={<FormDispositivo pageName="Editar Dispositivo" pageText="Dados dispositivo"/>} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/historico" element={<Historico />} />
             </Routes>
         </div>
     )
