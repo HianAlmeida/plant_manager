@@ -10,7 +10,9 @@ import GrassRoundedIcon from '@mui/icons-material/GrassRounded';
 
 import Historico from './Historico';
 import Agendamento from './Agendamento';
+import Initial from './Initial';
 import Home from './Home';
+
 
 export default function App() {
     const { pathname } = useLocation();
@@ -37,6 +39,7 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/historico" element={<Historico />} />
+                <Route path="/home" element={<Initial />} />
                 {/* <Route path="/agendamento" element={<Agendamento />} /> */}
             </Routes>
         </div>
