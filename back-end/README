@@ -1,0 +1,8 @@
+Development start server with : nodemon npm run dev
+List docker: docker ps -a
+
+
+TODO
+- classe do dispositivo
+- classe das leituras 
+- classe de atuação
