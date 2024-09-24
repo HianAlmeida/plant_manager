@@ -18,5 +18,4 @@ def actuation(request):
     async_to_sync(channel_layer.group_send)(
         data.get("id"), data
     )
-    print(channel_layer)
     return Response({"message":"Action requested"}, status=200)

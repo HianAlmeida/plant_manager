@@ -6,3 +6,10 @@ services:
       - "6379:6379"
     environment:
       - REDIS_PORT=6379
+      
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "5432:5432"

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'apps.accounts',
     'apps.readings',
+    'apps.devices',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# AUTH_USER_MODEL = "auth.User"
 
 ROOT_URLCONF = 'plant_manager.urls'
 
@@ -81,8 +84,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': environ.get("ENGINE"),
+        'NAME': environ.get("NAME"),
+        'USER': environ.get("USER"),
+        'PASSWORD': environ.get("PASSWORD"),
+        'HOST': environ.get("HOST"),
+        'PORT': environ.get("PORT"),
     }
 }
 
