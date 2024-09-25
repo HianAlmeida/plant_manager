@@ -30,7 +30,8 @@ const boxForms: SxProps = {
 interface LoginProps {
   pageName: string;
   buttonText: string;
-  seeOptions: boolean
+  seeOptions: boolean;
+  cadastro: boolean
 }
 
 export default function Login(props: LoginProps) {
@@ -44,7 +45,7 @@ export default function Login(props: LoginProps) {
         alignItems: 'center'
       }}>
 
-      <Grid container style={{ height: "400px" }}>
+      <Grid container style={{ height: "520px" }}>
 
         <Grid item xs={12} sm={6} sx={boxTexto}>
           <div>
@@ -56,20 +57,28 @@ export default function Login(props: LoginProps) {
 
         <Grid item xs={12} sm={6} sx={boxForms}>
           <div>
-          <p style={{ fontSize: "30px", margin: 0, marginBottom: "10px" }}><b>{props.pageName}</b></p>
+            <p style={{ fontSize: "30px", margin: 0, marginBottom: "10px" }}><b>{props.pageName}</b></p>
 
-            <FormLabel labelName="Email" labelText='Digite seu email aqui'/>
-            <FormLabel labelName="Senha" labelText='Digite sua senha aqui'/>
+            {props.cadastro &&
+              <div>
+                <FormLabel labelName="Nome" labelText='Digite seu nome aqui' />
+                <FormLabel labelName="Sobrenome" labelText='Digite seu sobrenome aqui' />
+                <FormLabel labelName="Email" labelText='Digite seu email aqui' />
+              </div>
+            }
+
+            <FormLabel labelName="Username" labelText='Digite seu username aqui' />
+            <FormLabel labelName="Senha" labelText='Digite sua senha aqui' />
 
             {props.seeOptions &&
-            <div style={{ color: "#76797E", marginTop: "10px", fontSize: "13px" }}>
-              <p style={{ display: "inline", marginRight: "15px" }}><Link to="/redefinir_senha"> Redefinir senha</Link></p>
-              <p style={{ display: "inline" }}><Link to="/novo_user"> Criar nova conta</Link></p>
-            </div>
+              <div style={{ color: "#76797E", marginTop: "10px", fontSize: "13px" }}>
+                <p style={{ display: "inline", marginRight: "15px" }}><Link to="/redefinir_senha"> Redefinir senha</Link></p>
+                <p style={{ display: "inline" }}><Link to="/novo_user"> Criar nova conta</Link></p>
+              </div>
             }
 
             <div style={{ marginTop: "20px" }}>
-              <ButtonStyled buttonText={props.buttonText}/>
+              <ButtonStyled buttonText={props.buttonText} />
             </div>
           </div>
         </Grid>
