@@ -16,9 +16,7 @@ class CreateAccountSerializer(ModelSerializer):
     def validate(self, attrs):
         username = attrs.get("username")
         if not User.objects.filter(username=username).exists():
-            # self.create(validated_data=attrs)
             return super().create(attrs)
-            return super().validate(attrs)
         return False
     
     def create(self, validated_data):
