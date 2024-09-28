@@ -21,7 +21,8 @@ const boxForms: SxProps = {
 interface DispositivoProps {
     pageName: string;
     pageText: string;
-  }
+    edit: Boolean
+}
 
 export default function FormDispositivo(props: DispositivoProps) {
     return (
@@ -36,12 +37,14 @@ export default function FormDispositivo(props: DispositivoProps) {
                     <div>
                         <p style={{ fontSize: "20px", margin: 0, marginBottom: "10px" }}><b>{props.pageText} </b></p>
 
-                        <FormLabel labelName="Id do dispositivo" labelText='Digite os 4 valores do dispositivo' />
+                        {!props.edit &&
+                            <FormLabel labelName="Id do dispositivo" labelText='Digite os 4 valores do dispositivo' />   
+                        }
                         <FormLabel labelName="Nome" labelText='Como gostaria de chamar esse dispositivo? ' />
-                        <FormSelect labelText = "Qual o intervalo de tempo que as leituras e atuações devem ser feitas?" fields={tempos} />
-                        <FormSelect labelText = "Qual o intervalo de tempo que as adubações devem ser feitas?" fields={tempos_adubacao} />
-                        <FormSelect labelText = "Qual a quantidade de horas que a planta deve receber luz por dia?" fields={tempos_iluminacao} />
-                        
+                        <FormSelect labelText="Qual o intervalo de tempo que as leituras e atuações devem ser feitas?" fields={tempos} />
+                        <FormSelect labelText="Qual o intervalo de tempo que as adubações devem ser feitas?" fields={tempos_adubacao} />
+                        <FormSelect labelText="Qual a quantidade de horas que a planta deve receber luz por dia?" fields={tempos_iluminacao} />
+
 
                         <div style={{ marginTop: "20px" }}>
                             <ButtonStyled buttonText="Salvar" />

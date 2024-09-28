@@ -43,7 +43,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: '#dcedc8',
+    backgroundColor: '#f4faee',
   },
   // hide last border
   '&:last-child td, &:last-child th': {
@@ -63,13 +63,12 @@ const TabelaLeitura: React.FC<Props> = ({ tempo, umidade_solo, luminosidade }) =
     rows.push(createData(tempo[i], umidade_solo[i], luminosidade[i]))
   }
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+    <TableContainer component={Paper} style={{ maxWidth: '400px' }}>
+      <Table size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Data - Hora</StyledTableCell>
-            <StyledTableCell align="right">Umidade do solo</StyledTableCell>
-            <StyledTableCell align="right">Luminosidade Ambiente</StyledTableCell>
+            <StyledTableCell align="right">Tipo</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -82,7 +81,6 @@ const TabelaLeitura: React.FC<Props> = ({ tempo, umidade_solo, luminosidade }) =
                 {row.tempo_formatado}
               </StyledTableCell>
               <StyledTableCell align="right">{row.umidade_solo}</StyledTableCell>
-              <StyledTableCell align="right">{row.luminosidade}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

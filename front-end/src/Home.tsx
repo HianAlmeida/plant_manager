@@ -22,10 +22,10 @@ export default function Home() {
                 >
                     {/* grid para todos os dispositivos */}
                     <CardDispositivo
-                        deviceName = "Nome dispositivo 1"
+                        deviceName = "Planta da sala"
                         deviceTempo = "1 hora"
-                        deviceAdubo = "2 horas"
-                        deviceLuz = "20 horas"
+                        deviceAdubo = "3 meses"
+                        deviceLuz = "5 horas"
                     />
 
                     <Button

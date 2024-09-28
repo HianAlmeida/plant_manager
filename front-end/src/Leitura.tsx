@@ -81,7 +81,21 @@ export default function () {
                 }}>
                     <GraficoLeitura tempo={tempo} temperatura={temperatura} umidade={umidade_ambiente} />
                 </Box>
-                <h3>Umidade do solo e luminosidade</h3>
+
+                <h3>Umidade do Solo</h3>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}>
+                    <GraficoLeitura tempo={tempo} temperatura={temperatura} umidade={umidade_ambiente} />
+                </Box>
+            </Box>
+
+            <h1>Histórico de atuações</h1>
+            <Box sx={{
+                padding: '5%', paddingTop: 0
+            }} >                
+                <h3>Dados de atuação</h3>
                 <Box sx={{
                     display: 'flex',
                     justifyContent: 'center'
@@ -89,8 +103,6 @@ export default function () {
                     <TabelaLeitura tempo={tempo} umidade_solo={umidade_solo} luminosidade={luz}/>
                 </Box>
             </Box>
-
-
         </Box>
     );
 }
