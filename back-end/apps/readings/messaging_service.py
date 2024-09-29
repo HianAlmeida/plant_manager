@@ -33,3 +33,16 @@ class DeviceMessageHandler:
         reading = Reading.objects.create(**message)
 
         return True
+    
+#modelo mensagem de leitura
+# {
+#     "water_level": false,
+#     "led": true,
+#     "token": "12345",
+#     "soil_moisture": 11,
+#     "air_humidity": 91,
+#     "air_temperature": 29,
+#     "luminosity": 20,
+#     "water_level": false
+# }
+

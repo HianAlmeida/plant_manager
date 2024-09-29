@@ -5,6 +5,7 @@ from asgiref.sync import async_to_sync
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from apps.readings.serializers import SaveActionSerializer
+from apps.readings.models import Reading
 
 
 # Create your views here.
@@ -22,3 +23,26 @@ def actuation(request):
     if serializer.validate(data):
         return Response({"message": "Action requested"}, status=200)
     return Response({"message": "Bad request"}, status=400)
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_readings(request, id):
+    readings = Reading.objects.filter(device_id=id).order_by('-created_at')[:10]
+    if readings.exists():
+        # Formata os dados para retorno
+        readings_data = [
+            {
+                'id': reading.id,
+                'soil_moisture': reading.soil_moisture,
+                'air_humidity': reading.air_humidity,
+                'air_temperature': reading.air_temperature,
+                'luminosity': reading.luminosity,
+                'water_level': reading.water_level,
+                'created_at': reading.created_at.isoformat(),  # Converte para string ISO
+            }
+            for reading in readings
+        ]
+
+        # Retorna os dados em formato JSON
+        return Response(readings_data, status=200)
+    return Response([], status=200)
