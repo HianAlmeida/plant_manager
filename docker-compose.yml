@@ -1,0 +1,42 @@
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PORT=6379
+      
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/hian/data:/var/lib/postgresql/data
+  
+  backend:
+    build: ./back-end
+    command: sh -c "python3 manage.py makemigrations && python3 manage.py migrate --noinput && gunicorn --config gunicorn_config.py plant_manager.wsgi:application"
+    restart: always
+    expose:
+      - "8000"
+    volumes:
+      - ./back-end:/app
+    env_file:
+      - ./back-end/.env
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/www/static/:/var/www/static/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - backend
+
+

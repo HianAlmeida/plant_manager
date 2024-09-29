@@ -7,6 +7,8 @@ import App from './App'
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
 // import ContentBody from './Temperaturas';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,9 +25,11 @@ const theme = createTheme({
 
 root.render(
   <StyledEngineProvider injectFirst>
-    <ThemeProvider theme={theme}>
-      <App></App>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <App></App>
+      </ThemeProvider>
+    </Provider>
   </StyledEngineProvider>
 );
 

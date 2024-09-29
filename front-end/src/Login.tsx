@@ -8,6 +8,8 @@ import ButtonStyled from './components/ButtonStyled';
 import { useState } from "react";
 import { Password } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from "./hooks/redux-hooks";
+import { login } from "./slices/authSlice";
 
 const boxTexto: SxProps = {
   padding: 12,
@@ -30,35 +32,28 @@ const boxForms: SxProps = {
   borderBottomRightRadius: "15px"
 };
 
-interface LoginProps {
-  pageName: string;
-  buttonText: string;
-  seeOptions: boolean;
-  cadastro: boolean;
-  onSubmit: (formData: any, navigate: any) => void; // Função de submit
-}
 
-export default function Login(props: LoginProps) {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    username: '',
-    password: ''
-  });
+export default function Login() {
+  const dispatch = useAppDispatch();
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Previne o recarregamento da página
-    props.onSubmit(formData, navigate); // Chama a função passada como prop
+    try {
+      await dispatch(
+        login({
+          username,
+          password,
+        })
+      ).unwrap();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    console.log(formData);
-  };
+
 
 
   return (
@@ -81,52 +76,30 @@ export default function Login(props: LoginProps) {
         </Grid>
 
         <Grid item xs={12} sm={6} sx={boxForms}>
-          <form onSubmit={handleSubmit}> {/* Adiciona o evento de submit */}
+          <form onSubmit={handleSubmit}>
             <div>
-              <p style={{ fontSize: "30px", margin: 0, marginBottom: "10px" }}><b>{props.pageName}</b></p>
-
-              {props.cadastro &&
-                <div>
-                  <FormLabel
-                    labelName="Nome:"
-                    labelText='Digite seu nome aqui'
-                    onChange={handleChange} 
-                    name='first_name'/>
-                  <FormLabel
-                    labelName="Sobrenome:"
-                    labelText='Digite seu sobrenome aqui'
-    
-                    onChange={handleChange} 
-                    name= 'last_name'/>
-                  <FormLabel
-                    labelName="Email:"
-                    labelText='Digite seu email aqui'
-    
-                    onChange={handleChange}
-                    name='email' />
-                </div>
-              }
+              <p style={{ fontSize: "30px", margin: 0, marginBottom: "10px" }}><b>Login</b></p>
 
               <FormLabel
                 labelName="Username:"
                 labelText='Digite seu username aqui'
-                onChange={handleChange} 
-                name='username'/>
+                onChange={(e) => setUsername(e.target.value)}
+                name='username' />
               <FormLabel
                 labelName="Senha:"
                 labelText='Digite sua senha aqui'
-                onChange={handleChange} 
-                name='password'/>
+                onChange={(e) => { setPassword(e.target.value); }}
+                name='password' />
 
-              {props.seeOptions &&
-                <div style={{ color: "#76797E", marginTop: "10px", fontSize: "13px" }}>
-                  <p style={{ display: "inline", marginRight: "15px" }}><Link to="/redefinir_senha"> Redefinir senha</Link></p>
-                  <p style={{ display: "inline" }}><Link to="/novo_user"> Criar nova conta</Link></p>
-                </div>
-              }
+
+              <div style={{ color: "#76797E", marginTop: "10px", fontSize: "13px" }}>
+                <p style={{ display: "inline", marginRight: "15px" }}><Link to="/redefinir_senha"> Redefinir senha</Link></p>
+                <p style={{ display: "inline" }}><Link to="/novo_user"> Criar nova conta</Link></p>
+              </div>
+
 
               <div style={{ marginTop: "20px" }}>
-                <ButtonStyled buttonText={props.buttonText} type="submit" />
+                <ButtonStyled buttonText="Acessar" type="submit" />
               </div>
             </div>
           </form>

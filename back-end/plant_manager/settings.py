@@ -28,7 +28,22 @@ SECRET_KEY = environ.get("SECRET_KEY")
 DEBUG = environ.get("DEBUG")
 
 ALLOWED_HOSTS = list(environ.get("ALLOWED_HOSTS", '*'))
-# CORS_ALLOWED_ORIGINS = list(environ.get("CORS_ALLOWED_ORIGINS", '*'))
+CORS_ALLOWED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:5433',  # for localhost (REACT Default)
+    'http://192.168.0.50:5433',  # for network 
+    'http://localhost:8080',  # for localhost (Developlemt)
+    'http://192.168.0.50:8080',  # for network (Development)
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5433',  # for localhost (REACT Default)
+    'http://192.168.0.50:5433',  # for network 
+    'http://localhost:8080',  # for localhost (Developlemt)
+    'http://192.168.0.50:8080',  # for network (Development)
+]
 
 WSGI_APPLICATION = 'plant_manager.wsgi.application'
 ASGI_APPLICATION = 'plant_manager.asgi.application'
@@ -54,7 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
     'apps.accounts',
@@ -169,5 +184,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ORIGIN_ALLOW_ALL = True
