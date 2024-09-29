@@ -7,12 +7,19 @@ import clsx from 'clsx';
 interface FormProps {
     labelName: string;
     labelText: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Adiciona a prop onChange
+    name: string; // Adiciona a prop name para identificar o campo
 }
 export default function FormLabel(props: FormProps) {
     return (
         <FormControl defaultValue="" >
             <Label>{props.labelName}</Label>
-            <StyledInput placeholder={props.labelText} />
+            <StyledInput 
+                placeholder={props.labelText}
+                // value={props.value} // Define o valor do input
+                onChange={props.onChange}
+                name = {props.name} // Define a função de mudança 
+                />
             <HelperText />
         </FormControl>
     )

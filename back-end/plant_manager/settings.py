@@ -28,7 +28,7 @@ SECRET_KEY = environ.get("SECRET_KEY")
 DEBUG = environ.get("DEBUG")
 
 ALLOWED_HOSTS = list(environ.get("ALLOWED_HOSTS", '*'))
-CORS_ALLOWED_ORIGINS = list(environ.get("CORS_ALLOWED_ORIGINS", '*'))
+# CORS_ALLOWED_ORIGINS = list(environ.get("CORS_ALLOWED_ORIGINS", '*'))
 
 WSGI_APPLICATION = 'plant_manager.wsgi.application'
 ASGI_APPLICATION = 'plant_manager.asgi.application'
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.readings',
     'apps.devices',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 AUTH_USER_MODEL = "auth.User"
@@ -167,3 +169,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL = True
