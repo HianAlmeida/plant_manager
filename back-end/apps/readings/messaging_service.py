@@ -1,10 +1,10 @@
 from apps.devices.models import Device
-from apps.readings.models import Reading
+from apps.readings.models import Reading, Action
+from datetime import datetime
 
 class DeviceMessageHandler:
     def save_device_message(self, message):
         # Encontra o dispositivo
-        print(message.get("token"))
         try: 
             device = Device.objects.get(hash=message.get("token"))
             # Verifica tipo de mensagem (salvamento de leitura ou de atuação feita)
@@ -17,7 +17,22 @@ class DeviceMessageHandler:
             return False
 
     def save_acting_message(self, message, device):
-        print("Salvo atuação")
+        #se o acting_id não existir cria uma nova atuação para o device, se existir apenas atualiza a data e o status
+        if message.get("action_id"): 
+            action = Action.objects.get(id=message.get("action_id"))
+            if not action.state: 
+                action.state = True
+                action.executed_at = datetime.now()
+                action.save()
+        else:
+            action = Action.objects.create(
+                device_id=device,
+                actuator=message.get("actuator"),
+                state=True,
+                created_at=datetime.now(),
+                executed_at=datetime.now()
+                )
+
         return True
         
     def save_reading_message(self, message, device):

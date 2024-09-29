@@ -8,7 +8,7 @@ from apps.devices.models import Device
 class Action(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     device_id = models.ForeignKey(Device, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.IntegerField(default=None, null=True)
     actuator = models.CharField(null=False, max_length=31)
     state = models.BooleanField(null=False, default=False)
     created_at = models.DateTimeField(null=False, auto_now=True)
