@@ -9,6 +9,8 @@ class Device(models.Model):
     fertilizing_interval = models.IntegerField(default=1)
     soil_humidity = models.IntegerField(default=50)
     sunlight_hours = models.IntegerField(default=4)
+    led = models.BooleanField()
+    water_level = models.BooleanField()
     created_at = models.DateTimeField(null=False, auto_now=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
     
