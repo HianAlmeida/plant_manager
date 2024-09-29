@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from apps.readings.serializers import SaveActionSerializer
-from apps.readings.models import Reading
+from apps.readings.models import Reading, Action
 
 
 # Create your views here.
@@ -45,4 +45,25 @@ def get_readings(request, id):
 
         # Retorna os dados em formato JSON
         return Response(readings_data, status=200)
+    return Response([], status=200)
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_actuation(request, id):
+    acting = Action.objects.filter(device_id=id).order_by('-created_at')[:10]
+    if acting.exists():
+        # Formata os dados para retorno
+        action_data = [
+            {
+                'id': action.id,
+                'actuator': action.actuator,
+                'state': action.state,
+                'created_at': action.created_at.isoformat(),
+                'executed_at': action.executed_at
+            }
+            for action in acting
+        ]
+        # Retorna os dados em formato JSON
+        return Response(action_data, status=200)
     return Response([], status=200)
