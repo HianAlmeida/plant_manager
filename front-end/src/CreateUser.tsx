@@ -2,16 +2,14 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import GrassRoundedIcon from '@mui/icons-material/GrassRounded';
 import { SxProps } from "@mui/material";
-import { Link } from 'react-router-dom';
 import FormLabel from './components/FormLabel';
 import ButtonStyled from './components/ButtonStyled';
 import { useState } from "react";
-import { Password } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-// import { useAppDispatch } from "./hooks/redux-hooks";
 import { register } from "./slices/authSlice";
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from "./hooks/redux-hooks";
+
 
 
 const boxTexto: SxProps = {

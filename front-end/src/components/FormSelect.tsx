@@ -15,13 +15,10 @@ import clsx from 'clsx';
 interface SelectProps {
     labelText: string;
     fields: { [key: string]: any };
+    onChange:(e: SelectChangeEvent<string>) => void;
+    name: string; // Adiciona a prop name para identificar o campo
 }
 export default function FormSelect(props: SelectProps) {
-    const [age, setAge] = React.useState('');
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value);
-    };
 
     return (
         <FormControl >
@@ -29,10 +26,9 @@ export default function FormSelect(props: SelectProps) {
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                label="Tempo"
-                onChange={handleChange}
                 sx={{ height: "39px", background: "white", width: "304px" }}
+                onChange={props.onChange}
+                name = {props.name} // Define a função de mudança 
             >
                 {Object.entries(props.fields).map(([value, label]) => (
                     <MenuItem key={value} value={value}>

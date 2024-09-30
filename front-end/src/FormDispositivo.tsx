@@ -5,8 +5,16 @@ import { SxProps } from "@mui/material";
 import FormLabel from './components/FormLabel';
 import ButtonStyled from './components/ButtonStyled';
 import FormSelect from "./components/FormSelect";
+import { useState } from "react";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "./hooks/redux-hooks";
 
-
+interface BasicUserInfo {
+    access: string; // ou o tipo apropriado
+    // adicione outras propriedades conforme necessário
+}
 const boxForms: SxProps = {
     display: "flex",
     alignItems: "center",
@@ -25,8 +33,71 @@ interface DispositivoProps {
 }
 
 export default function FormDispositivo(props: DispositivoProps) {
+    const navigate = useNavigate();
+    const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo) as BasicUserInfo | null;
+
+    const [formData, setFormData] = useState({
+        token: '',
+        reading_interval: '',
+        fertilizing_interval: '',
+        soil_humidity: '',
+        sunlight_hours: '',
+        nickname: ''
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        console.log(formData)
+    };
+
+    const handleSelectChange = (e: SelectChangeEvent) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        console.log(formData)
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        console.log(basicUserInfo)
+        e.preventDefault();
+
+        // Convert specific fields to integers
+        const updatedFormData = {
+            ...formData,
+            reading_interval: parseInt(formData.reading_interval as unknown as string, 10),
+            fertilizing_interval: parseInt(formData.fertilizing_interval as unknown as string, 10),
+            soil_humidity: parseInt(formData.soil_humidity as unknown as string, 10),
+            sunlight_hours: parseInt(formData.sunlight_hours as unknown as string, 10),
+        };
+
+        // Get basic user info for authentication
+        
+
+        if (!basicUserInfo || !basicUserInfo.access) {
+            console.error('User is not authenticated');
+            return; // Exit the function if user info is not available
+        }
+
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_BACK_END_API_URL}/devices/register/`,
+                updatedFormData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${basicUserInfo.access}`, // Use access token for JWT authentication
+                    },
+                }
+            );
+
+            console.log('Registro bem-sucedido:', response.data);
+            navigate('/');
+        } catch (error) {
+            console.error('Erro ao registrar:', error);
+            // Add error handling logic here
+        }
+    };
     return (
-        <Container maxWidth="md" sx={{ justifyContent: 'center', display: 'flex' }}>
+        <Container maxWidth="md" sx={{ justifyContent: 'center' }}>
             <Box
                 sx={{
                     width: "100%"
@@ -34,43 +105,78 @@ export default function FormDispositivo(props: DispositivoProps) {
             >
                 <h1>{props.pageName}</h1>
                 <Grid sx={boxForms}>
-                    <div>
-                        <p style={{ fontSize: "20px", margin: 0, marginBottom: "10px" }}><b>{props.pageText} </b></p>
-
-                        {/* {!props.edit &&
-                            <FormLabel labelName="Id do dispositivo" labelText='Digite os 4 valores do dispositivo' />   
-                        }
-                        <FormLabel labelName="Nome" labelText='Como gostaria de chamar esse dispositivo? ' />
-                        <FormSelect labelText="Qual o intervalo de tempo que as leituras e atuações devem ser feitas?" fields={tempos} />
-                        <FormSelect labelText="Qual o intervalo de tempo que as adubações devem ser feitas?" fields={tempos_adubacao} />
-                        <FormSelect labelText="Qual a quantidade de horas que a planta deve receber luz por dia?" fields={tempos_iluminacao} /> */}
-
-
-                        <div style={{ marginTop: "20px" }}>
-                            <ButtonStyled buttonText="Salvar" />
+                    <form onSubmit={handleSubmit}> {/* Adiciona o evento de submit */}
+                        <div>
+                            <p style={{ fontSize: "20px", margin: 0, marginBottom: "10px" }}><b>{props.pageText} </b></p>
+    
+                            {!props.edit &&
+                                <FormLabel
+                                    labelName="Id do dispositivo"
+                                    labelText='Digite os 4 valores do dispositivo'
+                                    onChange={handleChange}
+                                    name='token'
+                                />
+                            }
+                            <FormLabel
+                                labelName="Nome"
+                                labelText='Como gostaria de chamar esse dispositivo? '
+                                onChange={handleChange}
+                                name='nickname'
+                            />
+                            <FormSelect
+                                labelText="Qual o intervalo de tempo que as leituras e atuações devem ser feitas?"
+                                fields={tempos}
+                                onChange={handleSelectChange}
+                                name="reading_interval"
+                            />
+                            <FormSelect
+                                labelText="Qual o intervalo de tempo que as adubações devem ser feitas?"
+                                fields={tempos_adubacao}
+                                onChange={handleSelectChange}
+                                name="fertilizing_interval"
+                            />
+                            <FormSelect
+                                labelText="Qual a quantidade de horas que a planta deve receber luz por dia?"
+                                fields={tempos_iluminacao}
+                                onChange={handleSelectChange}
+                                name="sunlight_hours"
+                            />
+    
+                            <FormSelect
+                                labelText="Qual a porcentagem de umidade do solo minima para rega?"
+                                fields={porcentagem_rega}
+                                onChange={handleSelectChange}
+                                name="soil_humidity"
+                            />
+    
+    
+                            <div style={{ marginTop: "20px" }}>
+                                <ButtonStyled buttonText="Salvar" type="submit" />
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </Grid>
-
+    
             </Box>
         </Container>
-
+    
     );
-}
+};
+
 
 
 
 
 const tempos = {
-    "5": "5 minutos",
-    "10": "10 minutos",
-    "15": "15 minutos",
-    "30": "30 minutos",
-    "45": "45 minutos",
-    "60": "1 hora",
-    "90": "1 hora e 30 minutos",
-    "120": "2 horas",
-    "180": "3 horas"
+    5: "5 minutos",
+    10: "10 minutos",
+    15: "15 minutos",
+    30: "30 minutos",
+    45: "45 minutos",
+    60: "1 hora",
+    90: "1 hora e 30 minutos",
+    120: "2 horas",
+    180: "3 horas"
 }
 
 const tempos_adubacao = {
@@ -109,4 +215,16 @@ const tempos_iluminacao = {
     "22": "22 horas",
     "23": "23 horas",
     "24": "24 horas"
+}
+
+const porcentagem_rega = {
+    "10": "10%",
+    "20": "20%",
+    "30": "30%",
+    "40": "40%",
+    "50": "50%",
+    "60": "60%",
+    "70": "70%",
+    "80": "80%",
+    "90": "90%",
 }
