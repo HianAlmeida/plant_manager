@@ -8,7 +8,11 @@ import ButtonStyled from './components/ButtonStyled';
 import { useState } from "react";
 import { Password } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+// import { useAppDispatch } from "./hooks/redux-hooks";
+import { register } from "./slices/authSlice";
 import axios from 'axios';
+import { useAppDispatch, useAppSelector } from "./hooks/redux-hooks";
+
 
 const boxTexto: SxProps = {
     padding: 12,
@@ -34,7 +38,10 @@ const boxForms: SxProps = {
 
 
 export default function CreateUser() {
+    const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo); //@ts-ignore
+
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [formData, setFormData] = useState({
         first_name: '',
@@ -47,14 +54,31 @@ export default function CreateUser() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); 
+        // try {
+        //     const response = await axios.post(`${process.env.REACT_APP_BACK_END_API_URL}/auth/register/`, formData);
+        //     console.log('Registro bem-sucedido:', response.data);
+        //     navigate('/'); 
+        // } catch (error) {
+        //     console.error('Erro ao registrar:', error);
+        //     // adicionar alguma lógica de erro
+        // }
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BACK_END_API_URL}/auth/register/`, formData);
-            console.log('Registro bem-sucedido:', response.data);
+            await dispatch(
+              register({
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                email: formData.email,
+                username: formData.username,
+                password: formData.password,
+              })
+            ).unwrap();
+            console.log("A MORENA ESTA VIVA")
+            console.log(basicUserInfo)
+
             navigate('/'); 
-        } catch (error) {
-            console.error('Erro ao registrar:', error);
-            // adicionar alguma lógica de erro
-        }
+          } catch (e) {
+            console.error(e);
+          }
 
     };
 

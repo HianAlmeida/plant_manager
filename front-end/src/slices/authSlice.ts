@@ -7,7 +7,6 @@ type User = {
 };
 
 type NewUser = User & {
-    name: string;
     first_name: string,
     last_name: string,
     email: string,
@@ -51,12 +50,12 @@ export const login = createAsyncThunk("login", async (data: User) => {
 
 export const register = createAsyncThunk("register", async (data: NewUser) => {
     const response = await axiosInstance.post(
-        "/register",
+        "/auth/register/",
         data
     );
     const resData = response.data;
 
-    localStorage.setItem("userInfo", JSON.stringify(resData));
+    // localStorage.setItem("userInfo", JSON.stringify(resData));
 
     return resData;
 });
@@ -110,7 +109,7 @@ const authSlice = createSlice({
                 register.fulfilled,
                 (state, action: PayloadAction<UserBasicInfo>) => {
                     state.status = "idle";
-                    state.basicUserInfo = action.payload;
+                    // state.basicUserInfo = action.payload;
                 }
             )
             .addCase(register.rejected, (state, action) => {
