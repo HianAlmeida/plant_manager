@@ -9,8 +9,8 @@ import Container from '@mui/material/Container';
 import GrassRoundedIcon from '@mui/icons-material/GrassRounded';
 import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useAppDispatch } from "./hooks/redux-hooks";
-import { logout } from "./slices/authSlice";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import { logout } from "../slices/authSlice";
 import { useNavigate } from 'react-router-dom';
 
 const AppBarComponent = () => {

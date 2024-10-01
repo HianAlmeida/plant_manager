@@ -5,7 +5,7 @@ import Login from "./Login";
 import Home from "./Home";
 import Historico from "./Historico";
 import CreateUser from "./CreateUser";
-import AppBarComponent from "./AppBarComponent";
+import AppBarComponent from "./components/AppBarComponent";
 import FormDispositivo from "./FormDispositivo";
 import DefaultLayout from "./layouts/DefaultLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";

@@ -1,71 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import GraficoLeitura from "./GraficoLeitura";
+import GraficoLeitura from "./components/GraficoLeitura";
 import Box from '@mui/material/Box';
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get } from "firebase/database";
 import TabelaLeitura from './TabelaLeitura';
+import GraficoSolo from './components/GraficoSolo';
+import GraficoLuz from './components/GraficoLuz';
+interface Reading {
+    id: number;
+    soil_moisture: number;
+    air_humidity: number;
+    air_temperature: number;
+    luminosity: number;
+    water_level: boolean;
+    created_at: string;
+}
 
+interface LeituraProps {
+    readings: Reading[]; // Recebe um array de objetos Reading
+}
 
-export default function () {
+export default function Leitura({ readings }: LeituraProps) {
     const takeRight = (arr: string[] = [], n = 1) => n === 0 ? [] : arr.slice(-n);
 
-    const [tempo, setTempo] = useState<number[]>([]);
+    const [tempo, setTempo] = useState<string[]>([]);
     const [temperatura, setTemperatura] = useState<number[]>([]);
     const [umidade_ambiente, setUmidadeAmbiente] = useState<number[]>([]);
-    const [umidade_solo, setUmidadeSolo] = useState<string[]>([]);
-    const [luz, setLuz] = useState<string[]>([]);
+    const [umidade_solo, setUmidadeSolo] = useState<number[]>([]);
+    const [luz, setLuz] = useState<number[]>([]);
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        // Organiza os dados recebidos
+        const tempos: string[] = [];
+        const temperaturas: number[] = [];
+        const umidadesAmbiente: number[] = [];
+        const umidadesSolo: number[] = [];
+        const luz: number[] = [];
 
-    const fetchData = async () => {
-        const firebaseConfig = {
-            apiKey: "AIzaSyBuYJBVxjxoaaa2wfwVXsFzKUNOWim5KWw",
-            authDomain: "plantinhas-felizes.firebaseapp.com",
-            databaseURL: "https://plantinhas-felizes-default-rtdb.firebaseio.com",
-            projectId: "plantinhas-felizes",
-            storageBucket: "plantinhas-felizes.appspot.com",
-            messagingSenderId: "1064436465805",
-            appId: "1:1064436465805:web:5df16381c00fc0e6d1e2c4",
-            measurementId: "G-C8YB3LQ1JZ"
-        };
+        readings.forEach((reading) => {
+            tempos.push(reading.created_at);
+            temperaturas.push(reading.air_temperature);
+            umidadesAmbiente.push(reading.air_humidity);
+            umidadesSolo.push(reading.soil_moisture);
+            luz.push(reading.luminosity);
+        });
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const database = getDatabase(app);
+        // Atualiza os estados
+        setTempo(tempos);
+        setTemperatura(temperaturas);
+        setUmidadeAmbiente(umidadesAmbiente);
+        setUmidadeSolo(umidadesSolo);
+        setLuz(luz);
+        console.log(luz)
+    }, [readings]);
 
-        const dbRef = ref(getDatabase());
-
-        try {
-            get(child(dbRef, `/UsersData/J2L4vksigQc2E5xj2vxEQ9lOxOm2/readings`)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    //pega todas as keys da hash consultada
-                    const data_read = snapshot.val();
-                    var data_keys = Object.keys(data_read)
-                    //pegar as 10 ultimas keys
-                    data_keys = takeRight(data_keys, 10);
-
-                    data_keys.forEach((key) => {
-                        setTempo(tempo => [...tempo, parseInt(key) * 1000]);
-                        setTemperatura(temperatura => [...temperatura, parseFloat(data_read[key]["temperature"])]);
-                        setUmidadeAmbiente(umidade_ambiente => [...umidade_ambiente, parseFloat(data_read[key]["humidity"])]);
-                        setUmidadeSolo(umidade_solo => [...umidade_solo, data_read[key]["humidity_soil"]]);
-                        setLuz(luz => [...luz, data_read[key]["light"]]);
-                    });
-
-                } else {
-                    console.log("No data available");
-                }
-            }).catch((error) => {
-                console.error(error);
-            });
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
     return (
         <Box sx={{
             width: '100%'
@@ -79,7 +68,7 @@ export default function () {
                     display: 'flex',
                     justifyContent: 'center'
                 }}>
-                    <GraficoLeitura tempo={tempo} temperatura={temperatura} umidade={umidade_ambiente} />
+                    <GraficoLeitura tempo={formatarDatas(tempo)} temperatura={temperatura} umidade={umidade_ambiente} />
                 </Box>
 
                 <h3>Umidade do Solo</h3>
@@ -87,22 +76,29 @@ export default function () {
                     display: 'flex',
                     justifyContent: 'center'
                 }}>
-                    <GraficoLeitura tempo={tempo} temperatura={temperatura} umidade={umidade_ambiente} />
+                    <GraficoSolo tempo={formatarDatas(tempo)} umidade={umidade_solo} />
                 </Box>
-            </Box>
 
-            <h1>Histórico de atuações</h1>
-            <Box sx={{
-                padding: '5%', paddingTop: 0
-            }} >                
-                <h3>Dados de atuação</h3>
+                <h3>Luminosidade do Ambiente</h3>
                 <Box sx={{
                     display: 'flex',
                     justifyContent: 'center'
                 }}>
-                    <TabelaLeitura tempo={tempo} umidade_solo={umidade_solo} luminosidade={luz}/>
+                    <GraficoLuz tempo={formatarDatas(tempo)} luz={luz} />
                 </Box>
             </Box>
         </Box>
     );
 }
+
+const formatarDatas = (datas: string[]): string[] => {
+    return datas.map(data_string => {
+        let data = new Date(data_string);
+        const day = data.getDate().toString().padStart(2, '0');
+        const month = (data.getMonth() + 1).toString().padStart(2, '0');
+        const hours = data.getHours().toString().padStart(2, '0');
+        const minutes = data.getMinutes().toString().padStart(2, '0');
+
+        return `${day}/${month}\n${hours}:${minutes}`;
+    });
+};

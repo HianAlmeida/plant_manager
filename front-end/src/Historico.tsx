@@ -61,7 +61,13 @@ export default function () {
                 )}
             </p>
             <Atuadores />
-            <Leitura />
+            <p>
+                {readings.length > 0 ? ( // Verifica se existem readings
+                    <Leitura  readings={readings}/>
+                ) : (
+                    <span>Nenhuma leitura disponível.</span> // Mensagem caso não haja readings
+                )}
+            </p>
         </Container>
     );
 }
