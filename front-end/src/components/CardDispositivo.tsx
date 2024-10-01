@@ -8,6 +8,7 @@ import GrassRoundedIcon from '@mui/icons-material/GrassRounded';
 import { Link } from 'react-router-dom';
 
 interface dataDevice {
+    device_key: number;
     deviceName: string;
     deviceTempo: string;
     deviceAdubo: string;
@@ -40,7 +41,7 @@ export default function CardDispositivo(props: dataDevice) {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" component={Link} to="/historico">Ver</Button>
+                <Button size="small" component={Link} to={`/historico/${props.device_key}`}>Ver</Button>
                 <Button size="small" component={Link} to="/editar_dispositivo" >Editar</Button>
             </CardActions>
         </Card>

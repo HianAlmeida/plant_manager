@@ -75,6 +75,7 @@ export default function Home() {
                             deviceTempo={`${device.reading_interval} minutos`} // Intervalo de leitura
                             deviceAdubo={`${device.fertilizing_interval} meses`} // Intervalo de adubação
                             deviceLuz={`${device.sunlight_hours} horas`} // Horas de luz
+                            device_key={device.id}
                         />
                     ))}
 

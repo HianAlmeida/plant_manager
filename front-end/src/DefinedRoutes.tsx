@@ -30,7 +30,7 @@ const DefinedRoutes = () => {
                     <Route path="/novo_dispositivo" element={<FormDispositivo pageName="Cadastrar Dispositivo" pageText="Novo dispositivo" edit={false} />} />
                     <Route path="/editar_dispositivo" element={<FormDispositivo pageName="Editar Dispositivo" pageText="Dados dispositivo" edit={true} />} />
                     <Route path="/home" element={<Home />} />
-                    <Route path="/historico" element={<Historico />} />
+                    <Route path="/historico/:id" element={<Historico />} />
                 </Route>
             </Routes>
         </div>
