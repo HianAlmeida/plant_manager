@@ -32,6 +32,7 @@ def get_devices(request):
     user_devices = UserDevice.objects.select_related('device_id').filter(user_id=user.id)
     if user_devices.exists():
         device_data = [{"id": user_device.device_id.id, 
+                        "device_name": user_device.nickname,
                         "reading_interval": user_device.device_id.reading_interval, 
                         "fertilizing_interval": user_device.device_id.fertilizing_interval,
                         "soil_humidity": user_device.device_id.soil_humidity,

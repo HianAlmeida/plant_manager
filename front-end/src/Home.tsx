@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "./hooks/redux-hooks";
 
 interface Device {
     id: number;
+    device_name: string;
     reading_interval: number;
     fertilizing_interval: number;
     soil_humidity: number;
@@ -70,7 +71,7 @@ export default function Home() {
                     {devices.map(device => (
                         <CardDispositivo
                             key={device.id}
-                            deviceName={`Dispositivo ${device.id}`} // Nome do dispositivo
+                            deviceName={`${device.device_name}`} // Nome do dispositivo
                             deviceTempo={`${device.reading_interval} minutos`} // Intervalo de leitura
                             deviceAdubo={`${device.fertilizing_interval} meses`} // Intervalo de adubação
                             deviceLuz={`${device.sunlight_hours} horas`} // Horas de luz
