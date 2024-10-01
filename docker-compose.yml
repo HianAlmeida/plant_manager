@@ -26,6 +26,17 @@ services:
       - ./back-end:/app
     env_file:
       - ./back-end/.env
+    
+  frontend:
+      build: ./front-end
+      container_name: frontend
+      ports:
+        - '3000:3000'
+      restart: always
+      volumes:
+      - ./front-end:/app
+      env_file:
+      - ./front-end/.env
 
   nginx:
     image: nginx:alpine

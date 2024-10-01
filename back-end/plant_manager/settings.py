@@ -115,12 +115,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': environ.get("ENGINE"),
-        'NAME': environ.get("NAME"),
-        'USER': environ.get("USER"),
-        'PASSWORD': environ.get("PASSWORD"),
-        'HOST': environ.get("HOST"),
-        'PORT': environ.get("PORT"),
+        'ENGINE': environ.get("POSTGRES_ENGINE"),
+        'NAME': environ.get("POSTGRES_NAME"),
+        'USER': environ.get("POSTGRES_USER"),
+        'PASSWORD': environ.get("POSTGRES_PASSWORD"),
+        'HOST': environ.get("POSTGRES_HOST"),
+        'PORT': environ.get("POSTGRES_PORT"),
     }
 }
 
@@ -128,7 +128,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [(environ.get("REDIS_HOST"), environ.get("REDIS_PORT"))],
         },
     },
 }
