@@ -7,9 +7,26 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import GrassRoundedIcon from '@mui/icons-material/GrassRounded';
+import Button from '@mui/material/Button';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAppDispatch } from "./hooks/redux-hooks";
+import { logout } from "./slices/authSlice";
+import { useNavigate } from 'react-router-dom';
 
 const AppBarComponent = () => {
     const { pathname } = useLocation();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+          await dispatch(logout()).unwrap();
+          navigate("/");
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
     return (
 
         <AppBar position="static" sx={{ bgcolor: '#ffffff' }} elevation={0}>
@@ -24,6 +41,7 @@ const AppBarComponent = () => {
                             <Tab label="Novo Dispositivo" component={Link} to="/novo_dispositivo" value="/novo_dispositivo" />
                         </Tabs>
                     </Box>
+                    <Button size="large" endIcon={<LogoutIcon />} onClick={handleLogout}>Logout</Button>
                 </Toolbar>
             </Container>
         </AppBar>

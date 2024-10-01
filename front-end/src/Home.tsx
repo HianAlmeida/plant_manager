@@ -1,12 +1,57 @@
+import React, { useEffect, useState } from 'react';
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 import CardDispositivo from "./components/CardDispositivo";
+import axios from 'axios';
+import { useAppDispatch, useAppSelector } from "./hooks/redux-hooks";
+
+interface Device {
+    id: number;
+    reading_interval: number;
+    fertilizing_interval: number;
+    soil_humidity: number;
+    sunlight_hours: number;
+    led: number | null;
+    water_level: number | null;
+}
+
+interface BasicUserInfo {
+    access: string; // ou o tipo apropriado
+    // adicione outras propriedades conforme necessário
+}
+
 
 
 export default function Home() {
+    const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo) as BasicUserInfo | null;
+    const [devices, setDevices] = useState<Device[]>([]);
+
+    useEffect(() => {
+        if (!basicUserInfo || !basicUserInfo.access) {
+            console.error('User is not authenticated');
+            return; // Exit the function if user info is not available
+        }
+        const fetchDevices = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_BACK_END_API_URL}/devices`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${basicUserInfo.access}`, // Use access token for JWT authentication
+                        },
+                    }
+                );
+                setDevices(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar dispositivos:", error);
+            }
+        };
+
+        fetchDevices();
+    }, []);
+
     return (
         <Container maxWidth="md">
             <Box sx={{ width: "100%" }}>
@@ -21,12 +66,16 @@ export default function Home() {
                     }}
                 >
                     {/* grid para todos os dispositivos */}
-                    <CardDispositivo
-                        deviceName = "Planta da sala"
-                        deviceTempo = "1 hora"
-                        deviceAdubo = "3 meses"
-                        deviceLuz = "5 horas"
-                    />
+                    {/* Renderiza cada dispositivo usando CardDispositivo */}
+                    {devices.map(device => (
+                        <CardDispositivo
+                            key={device.id}
+                            deviceName={`Dispositivo ${device.id}`} // Nome do dispositivo
+                            deviceTempo={`${device.reading_interval} minutos`} // Intervalo de leitura
+                            deviceAdubo={`${device.fertilizing_interval} meses`} // Intervalo de adubação
+                            deviceLuz={`${device.sunlight_hours} horas`} // Horas de luz
+                        />
+                    ))}
 
                     <Button
                         variant="contained"

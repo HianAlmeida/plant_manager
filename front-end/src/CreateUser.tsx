@@ -70,7 +70,6 @@ export default function CreateUser() {
                 password: formData.password,
               })
             ).unwrap();
-            console.log("A MORENA ESTA VIVA")
             console.log(basicUserInfo)
 
             navigate('/'); 
