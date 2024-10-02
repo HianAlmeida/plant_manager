@@ -19,10 +19,10 @@ interface Reading {
 
 interface LeituraProps {
     readings: Reading[];
-    id?: string;
+    id: number;
 }
 
-export default function Leitura({ readings }: LeituraProps) {
+export default function Leitura({ readings, id }: LeituraProps) {
     const [tempo, setTempo] = useState<string[]>([]);
     const [temperatura, setTemperatura] = useState<number[]>([]);
     const [umidade_ambiente, setUmidadeAmbiente] = useState<number[]>([]);
@@ -86,7 +86,7 @@ export default function Leitura({ readings }: LeituraProps) {
                     <GraficoLuz tempo={formatarDatas(tempo)} luz={luz} />
                 </Box>
 
-                {/* <h1>Histórico de atuações</h1>
+                <h1>Histórico de atuações</h1>
                 <Box sx={{
                     padding: '5%', paddingTop: 0
                 }} >
@@ -95,9 +95,9 @@ export default function Leitura({ readings }: LeituraProps) {
                         display: 'flex',
                         justifyContent: 'center'
                     }}>
-                        <TabelaLeitura tempo={tempo} umidade_solo={umidade_solo} luminosidade={luz} />
+                        <TabelaLeitura id={id} /> 
                     </Box>
-                </Box> */}
+                </Box>
             </Box>
         </Box>
     );

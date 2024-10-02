@@ -23,7 +23,7 @@ interface BasicUserInfo {
 }
 
 export default function Historico() {
-    const { id } = useParams();
+    const { id } = useParams<{ id?: string }>(); // Definindo id como opcional
     const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo) as BasicUserInfo | null;
     const [readings, setReadings] = useState<Reading[]>([]);
 
@@ -49,7 +49,7 @@ export default function Historico() {
         };
 
         fetchDevices();
-    }, []);
+    }, [basicUserInfo, id]);
 
     return (
         <Container maxWidth="md" sx={{ justifyContent: 'center' }}>
@@ -63,7 +63,7 @@ export default function Historico() {
             <Atuadores />
             <p>
                 {readings.length > 0 ? ( // Verifica se existem readings
-                    <Leitura  readings={readings} id={id}/>
+                    <Leitura  readings={readings} id={Number(id)}/>
                 ) : (
                     <span>Nenhuma leitura disponível.</span> // Mensagem caso não haja readings
                 )}
