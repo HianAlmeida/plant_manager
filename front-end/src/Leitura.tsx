@@ -18,12 +18,11 @@ interface Reading {
 }
 
 interface LeituraProps {
-    readings: Reading[]; // Recebe um array de objetos Reading
+    readings: Reading[];
+    id?: string;
 }
 
 export default function Leitura({ readings }: LeituraProps) {
-    const takeRight = (arr: string[] = [], n = 1) => n === 0 ? [] : arr.slice(-n);
-
     const [tempo, setTempo] = useState<string[]>([]);
     const [temperatura, setTemperatura] = useState<number[]>([]);
     const [umidade_ambiente, setUmidadeAmbiente] = useState<number[]>([]);
@@ -86,6 +85,19 @@ export default function Leitura({ readings }: LeituraProps) {
                 }}>
                     <GraficoLuz tempo={formatarDatas(tempo)} luz={luz} />
                 </Box>
+
+                {/* <h1>Histórico de atuações</h1>
+                <Box sx={{
+                    padding: '5%', paddingTop: 0
+                }} >
+                    <h3>Dados de atuação</h3>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>
+                        <TabelaLeitura tempo={tempo} umidade_solo={umidade_solo} luminosidade={luz} />
+                    </Box>
+                </Box> */}
             </Box>
         </Box>
     );

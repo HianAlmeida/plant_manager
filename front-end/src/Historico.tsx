@@ -22,7 +22,7 @@ interface BasicUserInfo {
     access: string;
 }
 
-export default function () {
+export default function Historico() {
     const { id } = useParams();
     const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo) as BasicUserInfo | null;
     const [readings, setReadings] = useState<Reading[]>([]);
@@ -63,7 +63,7 @@ export default function () {
             <Atuadores />
             <p>
                 {readings.length > 0 ? ( // Verifica se existem readings
-                    <Leitura  readings={readings}/>
+                    <Leitura  readings={readings} id={id}/>
                 ) : (
                     <span>Nenhuma leitura disponível.</span> // Mensagem caso não haja readings
                 )}

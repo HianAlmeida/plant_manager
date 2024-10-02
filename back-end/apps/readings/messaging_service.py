@@ -4,6 +4,9 @@ from datetime import datetime
 
 class DeviceMessageHandler:
     def save_device_message(self, message):
+        print("\n\n\n\n\nmessage aqui \n\n\n\n\n\n")
+        print(message)
+
         # Encontra o dispositivo
         try: 
             device = Device.objects.get(hash=message.get("token"))
@@ -18,6 +21,7 @@ class DeviceMessageHandler:
 
     def save_acting_message(self, message, device):
         #se o acting_id não existir cria uma nova atuação para o device, se existir apenas atualiza a data e o status
+        print("\n\n\n\n\nmessage aqui \n\n\n\n\n\n")
         if message.get("action_id"): 
             action = Action.objects.get(id=message.get("action_id"))
             if not action.state: 
@@ -25,6 +29,7 @@ class DeviceMessageHandler:
                 action.executed_at = datetime.now()
                 action.save()
         else:
+            print("\n\n\n\n\nmessage aqui \n\n\n\n\n\n")
             action = Action.objects.create(
                 device_id=device,
                 actuator=message.get("actuator"),
