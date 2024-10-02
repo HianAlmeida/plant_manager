@@ -89,4 +89,4 @@ const TabelaLeitura: React.FC<Props> = ({ tempo, umidade_solo, luminosidade }) =
   );
 }
 
-export default TabelaLeitura;
+export default TabelaLeitura;   
