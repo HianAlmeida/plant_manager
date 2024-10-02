@@ -55,7 +55,7 @@ export default function Historico() {
         <Container maxWidth="md" sx={{ justifyContent: 'center' }}>
               <p>
                 {readings.length > 0 ? ( // Verifica se existem readings
-                    <Temperatura {...readings[0]} />
+                    <Temperatura {...readings[readings.length -1]} />
                 ) : (
                     <span>Nenhuma leitura disponível.</span> // Mensagem caso não haja readings
                 )}

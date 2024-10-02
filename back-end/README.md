@@ -17,3 +17,4 @@ TODOS:
 3 - mensagem de erro quando o cadastro de usuário falhar (FRONT)
 4 - verificar porque o cadastro não está centralizado na tela
 5 - rota de atualizar dispositivo
+6 - useefect em todas as rotas do historico

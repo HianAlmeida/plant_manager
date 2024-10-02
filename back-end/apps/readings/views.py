@@ -42,6 +42,7 @@ def get_readings(request, id):
             }
             for reading in readings
         ]
+        readings_data = readings_data[::-1]
 
         # Retorna os dados em formato JSON
         return Response(readings_data, status=200)

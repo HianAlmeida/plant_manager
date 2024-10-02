@@ -1,6 +1,7 @@
 services:
   redis:
     image: redis:latest
+    container_name: redis
     restart: always
     ports:
       - "6379:6379"
@@ -9,8 +10,10 @@ services:
       
   postgres:
     image: postgres
+    container_name: postgresql
     environment:
-      POSTGRES_PASSWORD: "password"
+      - POSTGRES_PASSWORD="password"
+      - POSTGRES_DB=plant_manager
     ports:
       - "5432:5432"
     volumes:
@@ -18,7 +21,8 @@ services:
   
   backend:
     build: ./back-end
-    command: sh -c "python3 manage.py makemigrations && python3 manage.py migrate --noinput && gunicorn --config gunicorn_config.py plant_manager.wsgi:application"
+    container_name: backend
+    command: sh -c "python3 manage.py makemigrations && python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
     restart: always
     expose:
       - "8000"
@@ -26,19 +30,35 @@ services:
       - ./back-end:/app
     env_file:
       - ./back-end/.env
-    
+
   frontend:
-      build: ./front-end
-      container_name: frontend
-      ports:
-        - '3000:3000'
-      restart: always
-      volumes:
-      - ./front-end:/app
-      env_file:
-      - ./front-end/.env
+    build: ./front-end
+    container_name: frontend
+    ports:
+      - '3000:3000'
+    restart: always
+    volumes:
+    - ./front-end:/app
+    - ./front-end/node_modules:/app/node_modules
+    env_file:
+    - ./front-end/.env
+    environment:
+      - NODE_PATH=/app/node_modules
+
+  websockets:
+    container_name: websockets
+    build: ./back-end
+    command: daphne -b 0.0.0.0 -p 8080 plant_manager.asgi:application
+    restart: always
+    expose:
+      - "8080"
+    volumes:
+      - ./back-end:/app
+    env_file:
+      - ./back-end/.env
 
   nginx:
+    container_name: nginx
     image: nginx:alpine
     restart: unless-stopped
     ports:
@@ -49,5 +69,9 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - backend
+      - websockets
+volumes:
+  front-end:
+  back-end:
 
 
