@@ -93,7 +93,9 @@ const formatarDatas = (dataString: string): string => {
 // Função para criar dados da tabela
 function createData(created_at: string, executed_at: string, actuator: string) {
   const criado_em = formatarDatas(created_at);
-  const executado_em = formatarDatas(executed_at);
+  
+  // Verifica se executed_at está vazio e define o valor apropriado
+  const executado_em = executed_at ? formatarDatas(executed_at) : "-";
   
   return { criado_em, executado_em, atuador: actuator };
 }

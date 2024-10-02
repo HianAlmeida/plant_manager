@@ -17,7 +17,7 @@ class SaveActionSerializer(ModelSerializer):
         #find no device
         device = Device.objects.get(hash=attrs.get("device_id"))
         #criar o action
-        action = Action.objects.create(user_id= user, device_id=device, actuator=attrs["actuator"])
+        action = Action.objects.create(user_id= user.id, device_id=device, actuator=attrs["actuator"])
 
         attrs["action_id"] = action.id
 
