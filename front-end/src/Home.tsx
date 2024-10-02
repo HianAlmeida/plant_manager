@@ -16,7 +16,7 @@ interface Device {
     soil_humidity: number;
     sunlight_hours: number;
     led: number | null;
-    water_level: number | null;
+    water_level: boolean | null;
 }
 
 interface BasicUserInfo {
@@ -76,6 +76,7 @@ export default function Home() {
                             deviceAdubo={`${device.fertilizing_interval} meses`} // Intervalo de adubação
                             deviceLuz={`${device.sunlight_hours} horas`} // Horas de luz
                             device_key={device.id}
+                            water_level={device.water_level}
                         />
                     ))}
 

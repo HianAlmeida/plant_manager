@@ -5,6 +5,8 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import axios from 'axios';
 import { useAppSelector } from "./hooks/redux-hooks";
+import Typography from '@mui/material/Typography';
+import InvertColorsOffIcon from '@mui/icons-material/InvertColorsOff';
 
 interface BasicUserInfo {
     access: string;
@@ -17,6 +19,7 @@ interface AtuadorProps {
 export default function Atuadores({ id }: AtuadorProps) {
     const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo) as BasicUserInfo | null;
     const [luz, setLuz] = useState(false);
+    const [water, setWater] = useState(false);
 
     const fetchDevices = async () => {
         if (!basicUserInfo || !basicUserInfo.access) {
@@ -31,6 +34,7 @@ export default function Atuadores({ id }: AtuadorProps) {
             });
             // Verifica se led é vazio e define como false se for
             setLuz(response.data.led !== undefined && response.data.led !== "" ? response.data.led : false);
+            setWater(response.data.water_level !== undefined && response.data.water_level !== "" ? response.data.water_level : false);
         } catch (error) {
             console.error("Erro ao buscar dispositivos:", error);
         }
@@ -80,7 +84,7 @@ export default function Atuadores({ id }: AtuadorProps) {
                 <Button
                     sx={{
                         ...boxTheme,
-                        bgcolor: luz === true ? "primary.dark" : "primary.main" ,
+                        bgcolor: luz === true ? "primary.dark" : "primary.main",
                     }}
                     disableElevation={luz === true}
                     onClick={() => handleClickActuate(luz === true ? "led_off" : "led_on")}
@@ -98,6 +102,29 @@ export default function Atuadores({ id }: AtuadorProps) {
                     </div>
                 </Button>
             </Box>
+
+            {water && (
+                 <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center', // Alinha no centro
+                    height: 60,
+                    bgcolor: "#FFE3E2",
+                    padding: "3px",
+                    width: "62%", // Ajuste a largura para 70%
+                    marginLeft: 'auto', // Para centralizar corretamente
+                    marginRight: 'auto', // Para centralizar corretamente
+                    borderRadius: "15px",
+                    marginTop: "10px"
+                }}>
+                    <InvertColorsOffIcon sx={{ fontSize: 30, color: "#F67360", marginRight: "20px" }} /> {/* Ícone dentro de uma div */}
+    
+                    <Typography variant="h6" sx={{ color: '#F67360', textAlign: 'center' }}>
+                        <b>Nível crítico de água no reservatório</b>
+                    </Typography>
+                </Box>
+            )}
+
         </Box>
     );
 }
