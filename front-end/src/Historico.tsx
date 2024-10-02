@@ -60,7 +60,7 @@ export default function Historico() {
                     <span>Nenhuma leitura disponível.</span> // Mensagem caso não haja readings
                 )}
             </p>
-            <Atuadores />
+            <Atuadores id={Number(id)}/>
             <p>
                 {readings.length > 0 ? ( // Verifica se existem readings
                     <Leitura  readings={readings} id={Number(id)}/>

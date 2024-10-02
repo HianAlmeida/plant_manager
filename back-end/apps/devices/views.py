@@ -42,5 +42,26 @@ def get_devices(request):
         return Response(device_data, status=200)
     return Response([], status=200) 
 
-#get leituras por dispositivos
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_device(request, id):
+    user = request.user
+    try:
+        user_device = UserDevice.objects.select_related('device_id').get(user_id=user.id, device_id=id)
+        device_data = {
+            "id": user_device.device_id.id,
+            "device_name": user_device.nickname,
+            "reading_interval": user_device.device_id.reading_interval,
+            "fertilizing_interval": user_device.device_id.fertilizing_interval,
+            "soil_humidity": user_device.device_id.soil_humidity,
+            "sunlight_hours": user_device.device_id.sunlight_hours,
+            "led": user_device.device_id.led,
+            "water_level": user_device.device_id.water_level
+        }
+
+        return Response(device_data, status=200)
+    
+    except UserDevice.DoesNotExist:
+        return Response({"message": "Device not found"}, status=404)
+
    
