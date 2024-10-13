@@ -19,7 +19,7 @@ interface dataDevice {
 export default function CardDispositivo(props: dataDevice) {
     return (
         <Card sx={{ maxWidth: 260 }}>
-            {props.water_level ? ( // Verifica se existem readings
+            {!props.water_level ? ( // Verifica se existem readings
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', height: 60, bgcolor: "#ae615f", padding: "3px" }}>
                     <InvertColorsOffIcon sx={{ fontSize: 30, color: "white" }} /> {/* Ícone dentro de uma div */}
 

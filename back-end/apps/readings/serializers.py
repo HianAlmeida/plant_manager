@@ -21,6 +21,7 @@ class SaveActionSerializer(ModelSerializer):
 
         attrs["action_id"] = action.id
 
+        self.change_led(attrs["actuator"], device)
         attrs["actuator"] = self.acting_type(attrs["actuator"])
         attrs["token"] = device.hash
 
@@ -41,3 +42,11 @@ class SaveActionSerializer(ModelSerializer):
             return 2
         if acting == "fertilizer":
             return 3
+    
+    def change_led(self, actuator, device):
+        if actuator == "led_on":
+            device.led = True
+            device.save()
+        if actuator == "led_off":
+            device.led = False
+            device.save()

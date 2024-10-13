@@ -9,6 +9,7 @@ interface FormProps {
     labelText: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Adiciona a prop onChange
     name: string; // Adiciona a prop name para identificar o campo
+    type?: string; // Add type prop for input type
 }
 export default function FormLabel(props: FormProps) {
     return (
@@ -19,6 +20,7 @@ export default function FormLabel(props: FormProps) {
                 // value={props.value} // Define o valor do input
                 onChange={props.onChange}
                 name = {props.name} // Define a função de mudança 
+                type={props.type || "text"}
                 />
             <HelperText />
         </FormControl>

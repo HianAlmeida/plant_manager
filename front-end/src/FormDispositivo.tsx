@@ -168,6 +168,7 @@ export default function FormDispositivo(props: DispositivoProps) {
 
 
 const tempos = {
+    1: "1 minuto",
     5: "5 minutos",
     10: "10 minutos",
     15: "15 minutos",
@@ -198,23 +199,7 @@ const tempos_iluminacao = {
     "5": "5 horas",
     "6": "6 horas",
     "7": "7 horas",
-    "8": "8 horas",
-    "9": "9 horas",
-    "10": "10 horas",
-    "11": "11 horas",
-    "12": "12 horas",
-    "13": "13 horas",
-    "14": "14 horas",
-    "15": "15 horas",
-    "16": "16 horas",
-    "17": "17 horas",
-    "18": "18 horas",
-    "19": "19 horas",
-    "20": "20 horas",
-    "21": "21 horas",
-    "22": "22 horas",
-    "23": "23 horas",
-    "24": "24 horas"
+    "8": "8 horas"
 }
 
 const porcentagem_rega = {

@@ -19,7 +19,7 @@ interface AtuadorProps {
 export default function Atuadores({ id }: AtuadorProps) {
     const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo) as BasicUserInfo | null;
     const [luz, setLuz] = useState(false);
-    const [water, setWater] = useState(false);
+    const [water, setWater] = useState(true);
 
     const fetchDevices = async () => {
         if (!basicUserInfo || !basicUserInfo.access) {
@@ -32,7 +32,6 @@ export default function Atuadores({ id }: AtuadorProps) {
                     Authorization: `Bearer ${basicUserInfo.access}`, // Use access token for JWT authentication
                 },
             });
-            // Verifica se led é vazio e define como false se for
             setLuz(response.data.led !== undefined && response.data.led !== "" ? response.data.led : false);
             setWater(response.data.water_level !== undefined && response.data.water_level !== "" ? response.data.water_level : false);
         } catch (error) {
@@ -45,11 +44,18 @@ export default function Atuadores({ id }: AtuadorProps) {
     }, [basicUserInfo, id]);
 
     const handleClickActuate = async (actuator: string) => {
+        let newLuzState = luz; // Store current luz state
+
+        if (actuator === "led_on") {
+            newLuzState = true; // Set luz to true when turning it on
+        } else if (actuator === "led_off") {
+            newLuzState = false; // Set luz to false when turning it off
+        }
+
         const params = {
             actuator: actuator,
             state: 1,
-            device_id: "hian123", // Substitua pelo ID do dispositivo real
-            id: "esp32" // Substitua pelo ID real
+            device_id: id,
         };
 
         if (!basicUserInfo || !basicUserInfo.access) {
@@ -60,11 +66,11 @@ export default function Atuadores({ id }: AtuadorProps) {
         try {
             await axios.post(`${process.env.REACT_APP_BACK_END_API_URL}/readings/actuation/`, params, {
                 headers: {
-                    Authorization: `Bearer ${basicUserInfo.access}`, // Use access token for JWT authentication
+                    Authorization: `Bearer ${basicUserInfo.access}`,
                 },
             });
-            // Após a ação, atualize a variável luz fazendo uma nova requisição GET
-            await fetchDevices(); // Chama a função para atualizar o estado da luz
+            setLuz(newLuzState); // Update luz state based on action
+            await fetchDevices(); // Fetch devices to ensure state is accurate
         } catch (error) {
             console.error("Erro ao executar a ação:", error);
         }
@@ -95,7 +101,7 @@ export default function Atuadores({ id }: AtuadorProps) {
                     </div>
                 </Button>
 
-                <Button sx={boxTheme} onClick={() => handleClickActuate("light")}>
+                <Button sx={boxTheme} onClick={() => handleClickActuate("fertilizer")}>
                     <div style={{ textAlign: "center" }}>
                         <LocalDiningIcon sx={iconTheme} />
                         <h3 style={{ color: "white", marginTop: "5px" }}>Adubar</h3>
@@ -103,28 +109,27 @@ export default function Atuadores({ id }: AtuadorProps) {
                 </Button>
             </Box>
 
-            {water && (
+            {!water && (
                  <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center', // Alinha no centro
+                    justifyContent: 'center',
                     height: 60,
                     bgcolor: "#FFE3E2",
                     padding: "3px",
-                    width: "62%", // Ajuste a largura para 70%
-                    marginLeft: 'auto', // Para centralizar corretamente
-                    marginRight: 'auto', // Para centralizar corretamente
+                    width: "62%",
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
                     borderRadius: "15px",
                     marginTop: "10px"
                 }}>
-                    <InvertColorsOffIcon sx={{ fontSize: 30, color: "#F67360", marginRight: "20px" }} /> {/* Ícone dentro de uma div */}
+                    <InvertColorsOffIcon sx={{ fontSize: 30, color: "#F67360", marginRight: "20px" }} />
     
                     <Typography variant="h6" sx={{ color: '#F67360', textAlign: 'center' }}>
                         <b>Nível crítico de água no reservatório</b>
                     </Typography>
                 </Box>
             )}
-
         </Box>
     );
 }
@@ -164,4 +169,4 @@ const iconTheme = {
     color: "white",
     fontSize: "50px",
     margin: "auto",
-};
+}

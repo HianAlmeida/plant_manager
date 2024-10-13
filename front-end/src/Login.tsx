@@ -89,7 +89,9 @@ export default function Login() {
                 labelName="Senha:"
                 labelText='Digite sua senha aqui'
                 onChange={(e) => { setPassword(e.target.value); }}
-                name='password' />
+                name='password' 
+                type="password"
+                />
 
 
               <div style={{ color: "#76797E", marginTop: "10px", fontSize: "13px" }}>

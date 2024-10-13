@@ -33,10 +33,10 @@ def get_readings(request, id):
         readings_data = [
             {
                 'id': reading.id,
-                'soil_moisture': reading.soil_moisture,
-                'air_humidity': reading.air_humidity,
-                'air_temperature': reading.air_temperature,
-                'luminosity': reading.luminosity,
+                'soil_moisture': round(reading.soil_moisture, 2), 
+                'air_humidity': round(reading.air_humidity, 2),     
+                'air_temperature': round(reading.air_temperature, 2),
+                'luminosity': round(reading.luminosity, 2),         
                 'water_level': reading.water_level,
                 'created_at': reading.created_at.isoformat(),  # Converte para string ISO
             }
