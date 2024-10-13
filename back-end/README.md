@@ -11,6 +11,8 @@ sudo systemctl stop postgresql
 docker compose up -d
 
 
+docker compose up --build
+
 TODOS: 
 1 - trocar as rotas de get dentro de back-end/apps/readings/views.py para um serializers (back-end/apps/readings/serializers.py)
 2 - como seria possível verificar quanto tempo o LED passou ligado durante o dia 

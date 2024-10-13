@@ -24,7 +24,7 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
-        print("\n\n\n\n\nmessage aqui \n\n\n\n\n\n")
+        print("\n\n\n\n\nmessage RECEBIDA aqui \n\n\n\n\n\n")
         print(text_data)
         handler = DeviceMessageHandler()
         text_data_json = json.loads(text_data)

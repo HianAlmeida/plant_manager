@@ -5,6 +5,7 @@ from asgiref.sync import async_to_sync
 from rest_framework.response import Response
 from apps.devices.serializers import PreregisterDeviceSerializer, RegisterDeviceSerializer
 from apps.devices.models import Device, UserDevice
+from apps.readings.models import Action
 
 @api_view(["POST"])
 def preregister_device(request):
@@ -63,5 +64,35 @@ def get_device(request, id):
     
     except UserDevice.DoesNotExist:
         return Response({"message": "Device not found"}, status=404)
+    
+@api_view(["GET"])
+def get_device_esp(request, id):
+    try:
+        device = Device.objects.get(hash=id)
+        #consultar a última fertilização desse device
+        # action = get_action(device.id)
+        device_data = {
+            "reading_interval": device.reading_interval,
+            "fertilizing_interval": device.fertilizing_interval,
+            "soil_humidity": device.soil_humidity
+            # "last_fertilizing": action
+        }
+        return Response(device_data, status=200)
+    
+    except UserDevice.DoesNotExist:
+        return Response({"message": "Device not found"}, status=404)
+    
 
+# def get_action(device_id):
+#     action = (
+#         Action.objects
+#         .filter(device_id=device_id, actuator="fertilizer")
+#         .order_by('-created_at')
+#         .values('executed_at')
+#         .first()
+#     )
+#     if action is not None:
+#         return action['executed_at']
+#     else:
+#         return None
    
