@@ -14,31 +14,16 @@
 #include <Adafruit_Sensor.h>
 #include <WebSocketsClient.h>
 
-
-#define WIFI_SSID "pasteizinhos"
-#define WIFI_PASSWORD "chamasnobuia"
 #define DHTPIN 4
-#define LedVerde 21
 #define sensorLuz 34
 #define atuadorLuz 15
 #define sensorSolo 32
 #define SensorBoia 33
 #define DHTTYPE DHT22
-#define POUCA_LUZ 100
-#define SOLO_SECO 800
-#define LedVermelho 19
 #define atuadorBomba 26
 #define atuadorServo 27
-#define SOLO_UMIDO 2000
-#define SOLO_MODERADO 1500
-#define WIFI_SSID "texaicos"
-#define WIFI_PASSWORD "lacucaracha"
-#define USER_PASSWORD "v4m0spl4nt4r"
-#define USER_EMAIL "josevenancioliveira@gmail.com"
-#define API_KEY "AIzaSyBuYJBVxjxoaaa2wfwVXsFzKUNOWim5KWw"
-#define DATABASE_URL "https://plantinhas-felizes-default-rtdb.firebaseio.com"
-JsonDocument doc;
 
+JsonDocument doc;
 AsyncWebServer server(80);
 
 const char* PARAM_SSID = "ssid";
@@ -48,11 +33,9 @@ const char* PASSWORD_PATH = "/password.bin";
 const char* SERVER_PATH = "http://192.168.1.177/api/devices/preregister/";
 const char* INFO_PATH = "http://192.168.1.177/api/devices/info/%s/";
 
-
 String ssid;
 String password;
 HTTPClient http;
-
 
 IPAddress localIP(192, 168, 1, 200); 
 IPAddress localGateway(192, 168, 1, 1); 
@@ -61,15 +44,15 @@ IPAddress subnet(255, 255, 0, 0);
 WebSocketsClient webSocket;
 
 const char* address = "192.168.1.177";
-int port = 80; // Change this to the port your server is running on.
+int port = 80; 
 char route[90];
 char buffer[65];
 char* token = ulltoa(ESP.getEfuseMac(), buffer, 10);
 int i = sprintf(route, "/ws/actuations/%s/", token);
 
-
 float umi;
 float temp;
+float soilHumidity;
 int timestamp;
 int valorNivelAgua;
 int valorAnalogicLuz;
@@ -78,49 +61,23 @@ int valorAnalogicSolo;
 int valorFirebaseSolo;
 int sensorFertilizante = 14;
 int valorDigitalFertilizante;
+int ledOnTime = 0;
+int ledOnCurrent = 0;
+bool readingsEnabled = false;
 unsigned long readingInterval;
 unsigned long fertilizingInterval;
 unsigned long timerDelay = 18000;
 unsigned long sendDataPrevMillis = 0;
 const char* ntpServer = "pool.ntp.org";
-String uid;
-String databasePath;
-String tempPath = "/temperature";
-String humPath = "/humidity";
-String humSoilPath = "/humidity_soil";
-String lightPath = "/light";
-String fertilizerPath = "/fertilizer";
-String nivelAguaPath = "/water_level";
-String timePath = "/timestamp";
-String parentPath;
-String statusFertilizante = "";
 Servo servoFertilizante;
 DHT dht(DHTPIN, DHTTYPE);
-
-enum Actuator: int { WATER, LED_ON, LED_OFF, FERTILIZER};
 
 bool readWaterLevel(){
   return digitalRead(SensorBoia);
 }
 
-void water(){
-  
-}
-
-void ledOn(){
-  
-}
-
-void ledOff(){
-  
-}
-
-void fertilize(){
-  
-}
-
 float readSoilMoisture(){
-  return analogRead(sensorSolo);
+  return analogRead(sensorSolo) / 40.95;
 }
 
 float readAirHumidity(){
@@ -132,28 +89,92 @@ float readAirTemperature(){
 }
 
 float readAmbientLight(){
-  return analogRead(sensorLuz);
+  return analogRead(sensorLuz) / 40.95;
 }
 
 bool readLed(){
   return digitalRead(atuadorLuz);
 }
 
-void sendReadings(){
+void getInfo(){
+    char infoRoute[200];
+    int ii = sprintf(infoRoute, INFO_PATH, token);
+
+    http.begin(String(infoRoute));
+    http.addHeader("Content-Type", "application/json");
+    String payload;
+    StaticJsonDocument<200> doc;
+    int httpResponseCode = http.GET();
+    if (httpResponseCode != 200){
+      Serial.println("Connection error...");
+    }
+    else{
+      readingsEnabled = true;
+    }
+    payload = http.getString();
+    http.end();
+    deserializeJson(doc, payload);
+    readingInterval = doc["reading_interval"];
+    readingInterval = readingInterval * 1000 * 60;
+    if (readingInterval == 0){
+      readingInterval = 3 * 1000 * 60;
+    }
+    Serial.println(readingInterval);
+    soilHumidity = doc["soil_humidity"];
+    fertilizingInterval = doc["fertilizing_interval"];
+}
+
+void sendReadings(bool waterLevel, float soilMoisture, float airHumidity, float airTemperature, float ambientLight, bool led){
     String payload;
     StaticJsonDocument<200> doc;
     
-    doc["water_level"] = readWaterLevel();
+    doc["water_level"] = waterLevel;
     doc["token"] = token;
-    doc["soil_moisture"] = readSoilMoisture();
-    // doc["air_humidity"] = readAirHumidity();
-    // doc["air_temperature"] = readAirTemperature();
-    doc["air_humidity"] = 87.5;
-    doc["air_temperature"] = 27.9;
-    doc["luminosity"] = readAmbientLight();
-    doc["led"] = readLed();
+    doc["soil_moisture"] = soilMoisture;
+    doc["air_humidity"] = airHumidity;
+    doc["air_temperature"] = airTemperature;
+    doc["luminosity"] = ambientLight;
+    doc["led"] = led;
     serializeJson(doc, payload);
     webSocket.sendTXT(payload);
+    Serial.print("Reading: ");
+    Serial.println(payload.c_str());
+    getInfo();
+}
+
+void sendAction(int actuator, int actionId=-1){
+    String payload;
+    StaticJsonDocument<200> doc;
+    
+    doc["actuator"] = actuator;
+    doc["token"] = token;
+    doc["type"] = "action";
+    if (actionId >=0){
+        doc["action_id"] = actionId;
+    }
+    serializeJson(doc, payload);
+    webSocket.sendTXT(payload);
+    Serial.println(payload);
+}
+
+void water(){
+    digitalWrite(atuadorBomba, HIGH);
+    delay(1000);
+    digitalWrite(atuadorBomba, LOW);  
+}
+
+void ledOn(){
+    digitalWrite(atuadorLuz, HIGH);
+}
+
+void ledOff(){
+    digitalWrite(atuadorLuz, LOW);
+}
+
+void fertilize(){
+    servoFertilizante.write(0);
+    delay(300);
+    servoFertilizante.write(90);
 }
 
 unsigned long getTime() {
@@ -183,12 +204,15 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16) {
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
     int actuator;
+    int actionId;
     switch(type) {
         case WStype_DISCONNECTED:
             Serial.printf("[WSc] Disconnected!\n");
+            readingsEnabled = false;
             break;
         case WStype_CONNECTED:
             Serial.printf("[WSc] Connected to url: %s\n", payload);
+            readingsEnabled = true;
 
             // send message to server when Connected
             // webSocket.sendTXT("Connected");
@@ -197,12 +221,15 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
             Serial.printf("[WSc] get text: %s\n", payload);
             deserializeJson(doc, payload);
             actuator = doc["actuator"];
+            actionId = doc["action_id"];
             switch(actuator){
               case 0:
                 water();
                 break;
               case 1:
                 ledOn();
+                ledOnTime = doc["time"];
+                ledOnTime = ledOnTime * 1000 * 60;
                 break;
               case 2:
                 ledOff();
@@ -212,7 +239,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
                 break;
 
             }
-            webSocket.sendTXT(payload);
+            sendAction(actuator, actionId);
 
             break;
         case WStype_BIN:
@@ -234,39 +261,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
 void setupWebSocket() {
     Serial.println("Setting up WebSocket client");
-    // server address, port and URL
     webSocket.begin(address, port, route);
-
-    // event handler
     webSocket.onEvent(webSocketEvent);
-
-    // use HTTP Basic Authorization this is optional remove if not needed
-    // webSocket.setAuthorization("user", "Password");
-
-    // try every 5000 again if connection has failed
     webSocket.setReconnectInterval(5000);
-}
-
-void getInfo(){
-    char infoRoute[200];
-    int ii = sprintf(infoRoute, INFO_PATH, token);
-
-    http.begin(String(infoRoute));
-    http.addHeader("Content-Type", "application/json");
-    String payload;
-    StaticJsonDocument<200> doc;
-    int httpResponseCode = http.GET();
-    if (httpResponseCode != 200){
-      Serial.println("Connection error...");
-    }
-    payload = http.getString();
-    http.end();
-    deserializeJson(doc, payload);
-    readingInterval = doc["reading_interval"];
-    readingInterval = readingInterval * 1000 * 60;
-    fertilizingInterval = doc["fertilizing_interval"];
-
-
 }
 
 unsigned long previousMillis = 0;
@@ -370,6 +367,36 @@ void setupSensors(){
   servoFertilizante.write(90);
 }
 
+void manageReadings(){
+    String payload;
+    StaticJsonDocument<200> doc;
+
+    bool waterLevel = readWaterLevel();
+    float soilMoisture = readSoilMoisture();
+    float airHumidity = readAirHumidity();
+    float airTemperature = readAirTemperature();
+    float ambientLight = readAmbientLight();
+    bool led = readLed();
+
+    sendReadings(waterLevel, soilMoisture, airHumidity, airTemperature, ambientLight, led);
+    if (soilMoisture < soilHumidity){
+        water();
+        sendAction(0);
+    }
+    if (ledOnTime > 0){
+        if (ledOnCurrent == 0){
+          ledOn();
+          sendAction(1);
+        }
+        if(ledOnCurrent >= ledOnTime){
+          ledOff();
+          ledOnTime = 0;
+          ledOnCurrent = 0;
+          sendAction(2);
+        }
+    }
+}
+
 
 void setup() {
   Serial.begin(115200);
@@ -381,11 +408,13 @@ void setup() {
   password = readFile(LittleFS, PASSWORD_PATH);
   Serial.println(ssid);
   Serial.println(password);
+  setupSensors();
 
-  if(initWiFi()) {
+
+  if(initWiFi()){
     setupWebSocket();
-    setupSensors();
   }else{
+      
     Serial.println("Setting AP (Access Point)");
     WiFi.softAP("ESP-WIFI-MANAGER", NULL);
 
@@ -452,14 +481,14 @@ void loop() {
     int httpResponseCode = http.POST(httpRequestData);
     Serial.println(httpResponseCode);    
     Serial.println(http.errorToString(httpResponseCode).c_str());
-    // ESP.restart();
     initialSetup = true;
     server.end();
+    ESP.restart();
   }
   else{
-    if(((millis() - sendDataPrevMillis) > readingInterval) || (sendDataPrevMillis == 0)) {
+    if(readingsEnabled && ((millis() - sendDataPrevMillis) > readingInterval)) {
     sendDataPrevMillis = millis();
-    sendReadings();
+    manageReadings();
     }
   }
   webSocket.loop();
