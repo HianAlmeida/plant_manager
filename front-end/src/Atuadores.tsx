@@ -109,7 +109,7 @@ export default function Atuadores({ id }: AtuadorProps) {
                 </Button>
             </Box>
 
-            {!water && (
+            {water == false && (
                  <Box sx={{
                     display: 'flex',
                     alignItems: 'center',

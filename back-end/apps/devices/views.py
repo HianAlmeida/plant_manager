@@ -79,7 +79,7 @@ def get_device_esp(request, id):
         }
         return Response(device_data, status=200)
     
-    except UserDevice.DoesNotExist:
+    except Device.DoesNotExist:
         return Response({"message": "Device not found"}, status=404)
     
 
