@@ -64,7 +64,7 @@ int valorDigitalFertilizante;
 int ledOnTime = 0;
 int ledOnCurrent = 0;
 bool readingsEnabled = false;
-unsigned long readingInterval;
+unsigned long readingInterval = 1000 * 60;
 unsigned long fertilizingInterval;
 unsigned long timerDelay = 18000;
 unsigned long sendDataPrevMillis = 0;
@@ -110,18 +110,19 @@ void getInfo(){
     }
     else{
       readingsEnabled = true;
+      payload = http.getString();
+      http.end();
+      deserializeJson(doc, payload);
+      readingInterval = doc["reading_interval"];
+      readingInterval = readingInterval * 1000 * 60;
+      if (readingInterval == 0){
+        readingInterval = 1000 * 60;
+      }
+      Serial.println(readingInterval);
+      soilHumidity = doc["soil_humidity"];
+      fertilizingInterval = doc["fertilizing_interval"];
     }
-    payload = http.getString();
-    http.end();
-    deserializeJson(doc, payload);
-    readingInterval = doc["reading_interval"];
-    readingInterval = readingInterval * 1000 * 60;
-    if (readingInterval == 0){
-      readingInterval = 3 * 1000 * 60;
-    }
-    Serial.println(readingInterval);
-    soilHumidity = doc["soil_humidity"];
-    fertilizingInterval = doc["fertilizing_interval"];
+    
 }
 
 void sendReadings(bool waterLevel, float soilMoisture, float airHumidity, float airTemperature, float ambientLight, bool led){
@@ -212,7 +213,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
             break;
         case WStype_CONNECTED:
             Serial.printf("[WSc] Connected to url: %s\n", payload);
-            readingsEnabled = true;
+            // readingsEnabled = true;
+            getInfo();
 
             // send message to server when Connected
             // webSocket.sendTXT("Connected");
@@ -348,7 +350,6 @@ bool initWiFi() {
   }
 
   Serial.println(WiFi.localIP());
-  getInfo();
 
   return true;
 }
@@ -482,11 +483,12 @@ void loop() {
     Serial.println(httpResponseCode);    
     Serial.println(http.errorToString(httpResponseCode).c_str());
     initialSetup = true;
+    setupWebSocket();
     server.end();
     ESP.restart();
   }
   else{
-    if(readingsEnabled && ((millis() - sendDataPrevMillis) > readingInterval)) {
+    if(readingsEnabled && ((millis() - sendDataPrevMillis > readingInterval) || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
     manageReadings();
     }
